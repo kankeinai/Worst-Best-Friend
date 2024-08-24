@@ -56,7 +56,7 @@ async def cmd_start(message: types.Message, conv: list[dict], counter: bool):
     conv = conv_init.copy()
     print(conv)
     counter = False
-    await message.answer("Everything is set up")
+    await message.answer("Conversation is reset.")
 
 @dp.message(F.voice)
 async def handle_voice_message(message: types.Message, conv: list[dict], counter: bool):
