@@ -59,7 +59,7 @@ async def cmd_start(message: types.Message, conv: list[dict], counter: bool):
 
 @dp.message(F.voice)
 async def handle_voice_message(message: types.Message, conv: list[dict], counter: bool):
-    counter = True
+    counter = False
 
     voice = message.voice
     file_id = voice.file_id
@@ -86,19 +86,16 @@ async def handle_voice_message(message: types.Message, conv: list[dict], counter
     else:
 
         await message.reply(generate_response(conv))
-
         # Clean up
     os.remove(local_file_path)
     os.remove(wav_file_path)
 
 @dp.message(F.photo)
 async def handle_photo(message: types.Message, conv: list[dict], counter: bool):
-    counter = True
+    counter = False
 
     file_info = await bot.get_file(message.photo[1].file_id)
-    print(file_info)
     file_url = f'https://api.telegram.org/file/bot{TOKEN}/{file_info.file_path}'
-    print(file_url)
 
     conv.append(
         {
@@ -133,17 +130,18 @@ async def handle_non_voice_message(message: types.Message, conv: list[dict], cou
 
 @dp.message()
 async def chat(message: types.Message, conv: list[dict], counter: bool):
-    counter = True
 
     if message.sticker:
        conv.append(
         {"role": "system", "content": "You were sent a sticker - " + message.sticker.emoji })
+       counter = False
     elif message.text:
         conv.append({"role": "user", "content": message.text})
-        if random.random()>=0.6 and counter: 
-
+        counter = True
+        if random.random()>=0.9 and counter: 
             conv.append({"role": "system", "content": "suggest to talk about " + topics[random.randint(0, len(topics) - 1)]+" instead"})
             counter = False
+            print("heres")
     
     text = generate_response(conv)
     conv.append(
