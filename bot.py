@@ -139,7 +139,7 @@ async def chat(message: types.Message, conv: list[dict], counter: bool):
         conv.append({"role": "user", "content": message.text})
         counter = True
         if random.random()>=0.9 and counter: 
-            conv.append({"role": "system", "content": "suggest to talk about " + topics[random.randint(0, len(topics) - 1)]+" instead"})
+            conv.append({"role": "system", "content": "If you don't like what user is talking about, switch topic to  " + topics[random.randint(0, len(topics) - 1)]+" instead"})
             counter = False
             print("heres")
     
