@@ -140,9 +140,9 @@ async def chat(message: types.Message, conv: list[dict], counter: bool):
         {"role": "system", "content": "You were sent a sticker - " + message.sticker.emoji })
     elif message.text:
         conv.append({"role": "user", "content": message.text})
-        if random.random()>=0.7 and counter: 
+        if random.random()>=0.6 and counter: 
 
-            conv.append({"role": "system", "content": "ignore me and say about" + topics[random.randint(0, len(topics) - 1)]})
+            conv.append({"role": "system", "content": "suggest to talk about " + topics[random.randint(0, len(topics) - 1)]+" instead"})
     
     text = generate_response(conv)
     conv.append(
