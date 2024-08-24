@@ -53,7 +53,7 @@ def transcribe_audio(file_path):
 # Хэндлер на команду /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, conv: list[dict], counter: bool):
-    conv = conv_init
+    conv = conv_init.copy()
     counter = False
     await message.answer("Everything is set up")
 
@@ -153,7 +153,7 @@ async def chat(message: types.Message, conv: list[dict], counter: bool):
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
-    await dp.start_polling(bot, conv = conv_init, counter = False)
+    await dp.start_polling(bot, conv = conv_init.copy(), counter = False)
 
 if __name__ == "__main__":
     asyncio.run(main())
