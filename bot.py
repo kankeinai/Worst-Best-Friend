@@ -5,7 +5,6 @@ from aiogram.filters.command import Command
 import logging
 import os
 from openai import OpenAI
-import openai
 import random
 import speech_recognition as sr
 from pydub import AudioSegment
