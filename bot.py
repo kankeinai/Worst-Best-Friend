@@ -75,8 +75,6 @@ async def handle_voice_message(message: types.Message, conv: list[dict], counter
     audio.export(wav_file_path, format="wav")
     transcription = transcribe_audio(wav_file_path)
     # Transcribe the .wav file
-    transcription = transcribe_audio(wav_file_path)
-    print(transcription)
     conv.append({"role": "user", "content": transcription})
     
     
