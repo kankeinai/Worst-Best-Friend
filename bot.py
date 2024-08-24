@@ -53,45 +53,48 @@ def transcribe_audio(file_path):
 
 # Хэндлер на команду /start
 @dp.message(Command("start"))
-async def cmd_start(message: types.Message, conv: list[dict]):
+async def cmd_start(message: types.Message, conv: list[dict], counter: bool):
     conv = conv_init
+    counter = False
     await message.answer("Everything is set up")
 
 @dp.message(F.voice)
-async def handle_voice_message(message: types.Message, conv: list[dict]):
+async def handle_voice_message(message: types.Message, conv: list[dict], counter: bool):
+    counter = True
+
     voice = message.voice
     file_id = voice.file_id
     file = await bot.get_file(file_id)
     file_path = file.file_path
     local_file_path = f"{AUDIO_DIR}/{file_id}.ogg"
-
     # Download the file from Telegram's servers
     await bot.download_file(file_path, local_file_path)
-    
     # Convert .ogg file to .wav using pydub
     audio = AudioSegment.from_ogg(local_file_path)
     wav_file_path = local_file_path.replace(".ogg", ".wav")
     audio.export(wav_file_path, format="wav")
-    
+    transcription = transcribe_audio(wav_file_path)
     # Transcribe the .wav file
     transcription = transcribe_audio(wav_file_path)
     print(transcription)
     conv.append({"role": "user", "content": transcription})
+    
+    
+    if random.random()>=0.5:
+        conv.append({"role": "system", "content": "say that you don't like voice message"})
+        await message.reply(generate_response(conv))
 
-    await message.reply(generate_response(conv))
+    else:
 
-    if random.random()>=0.75:
-        print("err")
-        conv.append({"role": "system", "content": "Someone sent you a voice message, but you don't like it when people send them."})
-        await message.answer(generate_response(conv))
+        await message.reply(generate_response(conv))
 
-
-    # Clean up
+        # Clean up
     os.remove(local_file_path)
     os.remove(wav_file_path)
 
 @dp.message(F.photo)
-async def handle_photo(message: types.Message, conv: list[dict]):
+async def handle_photo(message: types.Message, conv: list[dict], counter: bool):
+    counter = True
 
     file_info = await bot.get_file(message.photo[1].file_id)
     print(file_info)
@@ -123,21 +126,24 @@ async def handle_photo(message: types.Message, conv: list[dict]):
 
 
 @dp.message(F.document | F.video | F.audio)
-async def handle_non_voice_message(message: types.Message, conv: list[dict]):
+async def handle_non_voice_message(message: types.Message, conv: list[dict], counter: bool):
+
+    counter = True
     conv.append({"role": "system", "content": f"You were sent some file and you are too lazy to download it, you comment on it"})
     await message.answer(generate_response(conv))
 
 @dp.message()
-async def chat(message: types.Message, conv: list[dict]):
+async def chat(message: types.Message, conv: list[dict], counter: bool):
+    counter = True
 
     if message.sticker:
        conv.append(
-        {"role": "system", "content": "You were sent a sticker - " + message.sticker.emoji + " and it pisses you off when they send them"})
+        {"role": "system", "content": "You were sent a sticker - " + message.sticker.emoji })
     elif message.text:
         conv.append({"role": "user", "content": message.text})
-        print(conv!=conv_init)
-        if random.random()>=0.7 and conv!=conv_init:
-            conv.append({"role": "system", "content": "You say that you are not interested in talking to me and decide to change the topic of conversation to: " + topics[random.randint(0, len(topics) - 1)]})
+        if random.random()>=0.7 and counter: 
+
+            conv.append({"role": "system", "content": "ignore me and say about" + topics[random.randint(0, len(topics) - 1)]})
     
     text = generate_response(conv)
     conv.append(
@@ -149,7 +155,7 @@ async def chat(message: types.Message, conv: list[dict]):
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
-    await dp.start_polling(bot, conv = conv_init)
+    await dp.start_polling(bot, conv = conv_init, counter = False)
 
 if __name__ == "__main__":
     asyncio.run(main())
