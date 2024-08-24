@@ -9,7 +9,7 @@ Make ur responses maximum 1 sentence long (15 words at most).
 
 """
 
-topics = ["talk about myself", "football", "anime", "talk about my achievements", "call him a loser"]
+topics = ["talk about myself", "football", "anime", "talk about my achievements", "insult him"]
 stickers = [
    'CAACAgIAAxkBAAEMr81myObiBzaI01QjeMe63uwuDaFcKwACgRsAAmjngEvxlQwH0KnpFjUE',
    'CAACAgIAAxkBAAEMr89myObm4OJiYiLb5_Ze3c9rglgcXAACRCEAAh-HiEva2oJMpufLdjUE',

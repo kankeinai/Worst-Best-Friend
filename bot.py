@@ -11,12 +11,12 @@ from pydub import AudioSegment
 
 from config import *
 
-# Включаем логирование, чтобы не пропустить важные сообщения
+
 logging.basicConfig(level=logging.INFO)
-# Объект бота
+
 bot = Bot(token=TOKEN )
 
-# Диспетчер
+
 dp = Dispatcher()
 
 client = OpenAI(api_key = OPENAI_API_KEY)
