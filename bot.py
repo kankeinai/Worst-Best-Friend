@@ -54,6 +54,7 @@ def transcribe_audio(file_path):
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, conv: list[dict], counter: bool):
     conv = conv_init.copy()
+    print(conv)
     counter = False
     await message.answer("Everything is set up")
 
